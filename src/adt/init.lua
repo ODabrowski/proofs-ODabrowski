@@ -217,14 +217,16 @@ function Term.__div (term, mapping)
             tostring (k) .. " must be a term or a variable")
   end)
   local function rename (t)
+    local result
     if getmetatable (t) == Variable then
-      return mapping [t] or t
+      result = mapping [t] or t
     else
-      return term [Operation] (Fun.frommap (t)
+      result = t [Operation] (Fun.frommap (t)
         : filter  (function (k, _) return type (k) ~= "table" end)
         : map     (function (k, v) return k, rename (v) end)
         : tomap ())
     end
+    return result
   end
   return rename (term)
 end
