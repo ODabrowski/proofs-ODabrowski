@@ -170,7 +170,7 @@ describe ("#theorem", function ()
       Natural.Addition { Natural.Successor { Natural.Zero {} }, Natural._x },
       Natural.Successor { Natural._x },
     }
-    local theorem = Theorem.inductive (conjecture, { conjecture.variables [Natural._x] }, {
+    local theorem = Theorem.inductive (conjecture, conjecture.variables [Natural._x], {
       [Natural.Zero     ] = function ()
         -- s(0) + 0 = s(0)
         return Theorem.substitution (t1, t1.variables [Natural._x], Natural.Successor { Natural.Zero {} })
