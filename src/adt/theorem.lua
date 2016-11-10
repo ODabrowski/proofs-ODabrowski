@@ -152,8 +152,8 @@ function Theorem.axiom (axiom)
 end
 
 function Theorem.reflexivity (term)
-  assert (getmetatable (term) == Adt.Term,
-          "parameter must be a term")
+  assert (getmetatable (term) == Adt.Term or getmetatable (term) == Adt.Variable,
+          "parameter must be a term or a variable")
   return Theorem {
     variables = all_variables (term),
     [1] = term,
@@ -204,10 +204,9 @@ end
 
 function Theorem.substitutivity (operation, operands)
   assert (getmetatable (operation) == Adt.Operation,
-          "operation must be a term")
+          "operation must be an operation")
   assert (type (operands) == "table",
-          "operands must be a table")
-
+          "operands must be a table of theorems")
   Fun.frommap (operands)
     : each (function (k, v)
               assert (getmetatable (v) == Theorem,
@@ -227,14 +226,14 @@ end
 
 function Theorem.substitution (theorem, variable, replacement)
   assert (getmetatable (theorem) == Theorem,
-          "theorem must be a term")
+          "theorem must be a theorem")
   assert (getmetatable (variable) == Adt.Variable,
           "variable must be a variable")
-  assert (getmetatable (replacement) == Adt.Term,
-          "replacement must be a term")
+  assert (getmetatable (replacement) == Adt.Term or getmetatable (replacement) == Adt.Variable,
+          "replacement must be a term or a variable")
   assert (variable [Adt.Sort] == replacement [Adt.Sort],
           "variable and replacement must be of the same sort")
-  -- TODO: repolace `variable` by `replacement` in `theorem`
+  -- TODO: replace `variable` by `replacement` in `theorem`
   return Theorem {
     variables = all_variables (theorem),
     when = when,
@@ -245,7 +244,7 @@ end
 
 function Theorem.cut (theorem, replacement)
   assert (getmetatable (theorem) == Theorem,
-          "theorem must be a term")
+          "theorem must be a theorem")
   assert (getmetatable (replacement) == Theorem,
           "replacement must be a theorem")
   if not theorem.when then
